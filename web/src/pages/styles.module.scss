@@ -1,0 +1,185 @@
+.homepage {
+    width: 100%;
+    height: calc(100vh - 6.6rem);
+    overflow-y: scroll;
+    padding: 0 4.2rem;
+    padding-top: 6.6rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.latestEpisodes {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    ul {
+        width: 100%;
+        margin-top: 1.6rem;
+        list-style: none;
+
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+
+        li {
+            flex: 1;
+            background: var(--white);
+            border: solid 1px var(--gray-100);
+            border-radius: 1.6rem;
+            padding: 1.6rem;
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            img {
+                width: 6.4rem;
+                height: 6.4rem;
+                border-radius: 1rem;
+            }
+
+            .details {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+
+                a {
+                    font-family: Lexend, sans-serif;
+                    font-weight: 600;
+                    color: var(--gray-800);
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                p {
+                    max-width: 70%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin-top: 0.8rem;
+                }
+
+                div {
+                    margin-top: 0.5rem;
+
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    span {
+                        font-size: 0.8rem;
+                    }
+
+                    .separator {
+                        width: 0.2rem;
+                        height: 0.2rem;
+                        background: #ddd;
+                        border-radius: 50%;
+                    }
+                }
+
+            }
+
+            button {
+                width: 2.6rem;
+                height: 2.6rem;
+                background: var(--white);
+                border: solid 1px var(--gray-100);
+                border-radius: 0.6rem;
+                font-size: 0;
+                transition: filter .3s;
+
+                position: absolute;
+                bottom: 1.6rem;
+                right: 1.6rem;
+
+                img {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                }
+
+                &:hover {
+                    filter: brightness(0.95);
+                }
+            }
+        }
+    }
+}
+
+.allEpisodes {
+    margin-top: 3.2rem;
+    padding-bottom: 2rem;
+
+    h2 {
+        margin-bottom: 2.1rem;
+    }
+
+    table {
+        width: 100%;
+
+        th, td {
+            padding: 0.8rem 1rem;
+            border-bottom: solid 1px var(--gray-100);
+        }
+
+        th {
+            font: 500 0.7rem Lexend, sans-serif;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        td {
+            font-size: 0.8rem;
+
+            img {
+                width: 2.6rem;
+                height: 2.6rem;
+                border-radius: 0.5rem;
+            }
+
+            a {
+                font: 600 1rem Lexend, sans-serif;
+                color: var(--gray-800);
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            span {
+                font-size: 0.9rem;
+            }
+
+            button {
+                width: 2rem;
+                height: 2rem;
+                background: var(--white);
+                border: solid 1px var(--gray-100);
+                border-radius: 0.6rem;
+                font-size: 0;
+                transition: filter .3s;
+
+                img {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
+                &:hover {
+                    filter: brightness(0.95);
+                }
+            }
+        }
+    }
+}

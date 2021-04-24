@@ -44,31 +44,31 @@
 
     .podcastInfo {
         width: 19.7rem;
+        text-align: center;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
 
-        display: none;
-
-        .img {
+        img {
             width: 100%;
             height: 23rem;
-            background: red;
             border-radius: 1.6rem;
         }
 
         h2 {
-            font-size: 1.6rem;
+            font: 600 1.6rem Lexend, sans-serif;
             color: var(--white);
+            line-height: 1.7rem;
             margin-top: 2.1rem;
         }
 
         p {
             font-size: 1rem;
-            color: #DCCDFF;
-            margin-top: 0.5rem;
+            color: var(--white);
+            opacity: 0.4;
+            margin-top: 1rem;
         }
     }
 
@@ -88,12 +88,21 @@
                 line-height: 1.1rem;
             }
 
-            span {
+            .slider {
                 width: 11.6rem;
                 height: 0.2rem;
-                background: var(--purple-300);
-                border-radius: 0.6rem;
+
+                display: flex;
+                align-items: center;
+
+                .emptySlider {
+                    width: 100%;
+                    height: 100%;
+                    background: var(--purple-300);
+                    border-radius: 0.6rem;
+                }
             }
+
         }
 
         .controls {
@@ -103,19 +112,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
 
             button {
                 background: transparent;
                 border: 0;
                 font-size: 0;
-                border-radius: 1.6rem;
+                border-radius: 1rem;
+
+                transition: filter .2s;
+
+                &:hover:not(:disabled) {
+                    filter: brightness(0.7);
+                }
+
+                &:disabled {
+                    cursor: default;
+                    opacity: 0.5;
+                }
             }
 
             button.playButton {
                 width: 4.2rem;
                 height: 4.2rem;
                 background: var(--purple-400);
+
+                &:hover:not(:disabled) {
+                    filter: brightness(0.95);
+                }
             }
         }
     }

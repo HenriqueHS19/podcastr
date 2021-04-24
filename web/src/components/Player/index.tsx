@@ -1,6 +1,31 @@
+import { useContext, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
+import { PlayerContext } from '../../contexts/PlayerContext';
 import styles from './styles.module.scss';
 
 export function Player() {
+    const { episodeList, currentEpisodeIndex, isPlaying, togglePlay, setPlayingState } = useContext(PlayerContext);
+
+    const episode = episodeList[currentEpisodeIndex];
+
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    useEffect(function () {
+        if (!audioRef.current) {
+            return;
+        }
+
+        if (isPlaying) {
+            audioRef.current.play();
+        }
+        else {
+            audioRef.current.pause();
+        }
+    }, [isPlaying]);
+
     return (
         <div className={styles.container}>
             <header>
@@ -8,42 +33,92 @@ export function Player() {
                 <strong> Tocando agora </strong>
             </header>
 
-            <div className={styles.message}>
-                <p> Selecione um <br /> podcast para ouvir </p>
-            </div>
-
-            <div className={styles.podcastInfo}>
-                <div className={styles.img}></div>
-                <h2> Como codar tranquilo </h2>
-                <p> Tiago e Maria </p>
-            </div>
+            { episode ? (
+                <div className={styles.podcastInfo}>
+                    <Image
+                        width={592}
+                        height={592}
+                        src={episode.thumbnail}
+                        alt={episode.title}
+                        objectFit="cover"
+                    />
+                    <h2> {episode.title} </h2>
+                    <p> {episode.members} </p>
+                </div>
+            )
+                :
+                (
+                    <div className={styles.message}>
+                        <p> Selecione um <br /> podcast para ouvir </p>
+                    </div>
+                )
+            }
 
             <footer>
                 <div className={styles.duration}>
                     <p> 00:00 </p>
-                    <span></span>
-                    <p> 00:00 </p>
+                    <div className={styles.slider}>
+                        {episode ? (
+                            <Slider
+                                trackStyle = {{ backgroundColor: '#04d361' }}
+                                railStyle = {{ backgroundColor: '#9f75ff' }}
+                                handleStyle = {{ borderColor: '#04d361', borderWidth: 4 }}
+                            />
+                        )
+                        :
+                        (
+                            <div className={styles.emptySlider}></div>
+                        )
+                    }
+
+                    </div>
+                    <p> {episode ? episode.durationAsString : '00:00'} </p>
                 </div>
 
+                {episode &&
+                    <audio
+                        ref={audioRef}
+                        src={episode.url}
+                        autoPlay
+                        onPlay={ function () {
+                            setPlayingState(true);
+                        }}
+                        onPause={ function () {
+                            setPlayingState(false);
+                        }}
+                    />
+                }
+
                 <div className={styles.controls}>
-                    <button>
-                        <img src="/shuffle.svg" alt="Shuffle icon" />
+                    <button type="button" disabled={!episode}>
+                        <img src="/shuffle.svg" alt="Embaralhar" />
                     </button>
 
-                    <button>
-                        <img src="/play-previous.svg" alt="Previous icon" />
+                    <button type="button" disabled={!episode}>
+                        <img src="/play-previous.svg" alt="Reproduzir anterior" />
                     </button>
 
-                    <button className={styles.playButton}>
-                        <img src="/play.svg" alt="Play icon" />
+                    <button
+                        type="button"
+                        className={styles.playButton}
+                        disabled={!episode}
+                        onClick = {function () {
+                            togglePlay();
+                        }}
+                    >
+                        {isPlaying
+                            ? <img src="/pause.svg" alt="Pausar"/>
+                            : <img src="/play.svg" alt="Reproduzir" />
+                        }
+
                     </button>
 
-                    <button>
-                        <img src="/play-next.svg" alt="Next icon" />
+                    <button type="button" disabled={!episode}>
+                        <img src="/play-next.svg" alt="Reproduzir proximo" />
                     </button>
 
-                    <button>
-                        <img src="/repeat.svg" alt="repeat icon" />
+                    <button type="button" disabled={!episode}>
+                        <img src="/repeat.svg" alt="Repitir" />
                     </button>
                 </div>
             </footer>

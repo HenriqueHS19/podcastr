@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { format, parseISO } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import Link from 'next/link';
 
+import { PlayerContext } from '../contexts/PlayerContext';
 import { api } from '../services/api';
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 
@@ -26,6 +28,9 @@ interface IHome {
 }
 
 export default function Home({ latestEpisodes, allEpisodes }: IHome) {
+
+    const { play } = useContext(PlayerContext);
+
     return (
         <div className={styles.homepage}>
             <section className={styles.latestEpisodes}>
@@ -56,7 +61,9 @@ export default function Home({ latestEpisodes, allEpisodes }: IHome) {
                                     </div>
                                 </div>
 
-                                <button>
+                                <button onClick={ function () {
+                                    play(episode);
+                                }}>
                                     <img src="/play-green.svg" alt="Tocar episódio" />
                                 </button>
                             </li>
@@ -113,7 +120,9 @@ export default function Home({ latestEpisodes, allEpisodes }: IHome) {
                                     </td>
 
                                     <td>
-                                        <button>
+                                        <button type="button" onClick={ function () {
+                                            play(episode);
+                                        }}>
                                             <img src="/play-green.svg" alt="Reproduzir episodio" />
                                         </button>
                                     </td>

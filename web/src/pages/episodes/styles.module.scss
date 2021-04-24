@@ -1,7 +1,8 @@
 .container {
-    width: 100%;
+    width: 48rem;
     height: calc(100vh - 6.65rem);
-    padding: 3rem 12rem;
+    padding: 3rem 2rem;
+    margin: 0 auto;
 
     div {
         width: 100%;
@@ -23,9 +24,15 @@
             position: absolute;
             left: calc(( -3.2rem /2 ));
 
+            transition: filter 0.2s;
+
             img {
-                width: 1.6rem;
-                height: 1.6rem;
+                width: 1rem;
+                height: 1rem;
+            }
+
+            &:hover {
+                filter: brightness(0.95);
             }
         }
         button.reproduceButton {
@@ -74,6 +81,13 @@
         font-size: 1rem;
         line-height: 1.7rem;
         margin-top: 2.1rem;
+
+        display: block;
+
+        p {
+            margin: 1.5rem 0;
+            color: var(--gray-800);
+        }
     }
 }
 

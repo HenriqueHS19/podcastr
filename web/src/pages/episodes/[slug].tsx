@@ -1,13 +1,13 @@
-import { GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps } from 'next';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { api } from '../../services/api';
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
 import styles from './styles.module.scss';
-
 
 interface IEpisode {
     id: string;
@@ -25,17 +25,19 @@ interface IEpisodeProps {
     episode: IEpisode;
 }
 
-export function Episode({ episode }: IEpisodeProps) {
+export default function Episode({ episode }: IEpisodeProps) {
     return (
         <section className={styles.container}>
             <div>
-                <button type="button">
-                    <img src="/arrow-left.svg" alt="Voltar" />
-                </button>
+                <Link href="/">
+                    <button type="button">
+                        <img src="/arrow-left.svg" alt="Voltar" />
+                    </button>
+                </Link>
 
                 <Image
-                    width={120}
-                    height={120}
+                    width={700}
+                    height={160}
                     src={episode.thumbnail}
                     alt={episode.title}
                     objectFit="cover"
@@ -56,9 +58,20 @@ export function Episode({ episode }: IEpisodeProps) {
                 <span> {episode.durationAsString} </span>
             </div>
 
-            <p className={styles.description}> {episode.description} </p>
+            <div
+                className={styles.description}
+                dangerouslySetInnerHTML={{ __html: episode.description }}
+            />
+
         </section>
     );
+}
+
+export const getStaticPaths: GetStaticPaths = async function () {
+    return {
+        paths: [],
+        fallback: 'blocking',
+    };
 }
 
 export const getStaticProps: GetStaticProps = async function (context) {
@@ -76,12 +89,12 @@ export const getStaticProps: GetStaticProps = async function (context) {
         durationAsString: convertDurationToTimeString(Number(data.file.duration)),
         description: data.description,
         url: data.file.url,
-    }
+    };
 
     return {
         props: {
             episode,
         },
         revalidate: 60 * 60 * 24 // 24 hours
-    }
+    };
 }

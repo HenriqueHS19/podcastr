@@ -1,13 +1,32 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import { IoShuffle, IoRepeat } from 'react-icons/io5';
 
-import { PlayerContext } from '../../contexts/PlayerContext';
+import { usePlayer } from '../../contexts/PlayerContext';
 import styles from './styles.module.scss';
+import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString';
 
 export function Player() {
-    const { episodeList, currentEpisodeIndex, isPlaying, togglePlay, setPlayingState } = useContext(PlayerContext);
+    const [progress, setProgress] = useState(0);
+
+    const {
+        episodeList,
+        currentEpisodeIndex,
+        isPlaying,
+        isLooping,
+        isShuffing,
+        togglePlay,
+        toggleLoop,
+        toggleShuffing,
+        setPlayingState,
+        nextEpisode,
+        previousEpisode,
+        hasNext,
+        hasPrevious,
+        clearStatePlayer,
+    } = usePlayer();
 
     const episode = episodeList[currentEpisodeIndex];
 
@@ -26,6 +45,28 @@ export function Player() {
         }
     }, [isPlaying]);
 
+    function setupProgressListener() {
+        audioRef.current.currentTime = 0;
+
+        audioRef.current.addEventListener('timeupdate', function () {
+            setProgress(audioRef.current.currentTime);
+        });
+    }
+
+    function handleSeek(amount: number) {
+        audioRef.current.currentTime = amount;
+        setProgress(amount);
+    }
+
+    function handleEpisodeEnded() {
+        if (hasNext) {
+            nextEpisode();
+        }
+        else {
+            clearStatePlayer();
+        }
+    }
+
     return (
         <div className={styles.container}>
             <header>
@@ -39,8 +80,8 @@ export function Player() {
                         width={592}
                         height={592}
                         src={episode.thumbnail}
-                        alt={episode.title}
                         objectFit="cover"
+                        alt={episode.title}
                     />
                     <h2> {episode.title} </h2>
                     <p> {episode.members} </p>
@@ -56,10 +97,13 @@ export function Player() {
 
             <footer>
                 <div className={styles.duration}>
-                    <p> 00:00 </p>
+                    <p> {convertDurationToTimeString(progress)} </p>
                     <div className={styles.slider}>
                         {episode ? (
                             <Slider
+                                max={episode.duration}
+                                value={progress}
+                                onChange={handleSeek}
                                 trackStyle = {{ backgroundColor: '#04d361' }}
                                 railStyle = {{ backgroundColor: '#9f75ff' }}
                                 handleStyle = {{ borderColor: '#04d361', borderWidth: 4 }}
@@ -80,21 +124,37 @@ export function Player() {
                         ref={audioRef}
                         src={episode.url}
                         autoPlay
+                        loop={isLooping}
                         onPlay={ function () {
                             setPlayingState(true);
                         }}
                         onPause={ function () {
                             setPlayingState(false);
                         }}
+                        onLoadedMetadata={setupProgressListener}
+                        onEnded={handleEpisodeEnded}
                     />
                 }
 
                 <div className={styles.controls}>
-                    <button type="button" disabled={!episode}>
-                        <img src="/shuffle.svg" alt="Embaralhar" />
+                    <button
+                        type="button"
+                        disabled={!episode || episodeList.length === 1}
+                        className={isShuffing ? styles.isActive : ''}
+                        onClick={ function () {
+                            toggleShuffing();
+                        }}
+                    >
+                        <IoShuffle />
                     </button>
 
-                    <button type="button" disabled={!episode}>
+                    <button
+                        type="button"
+                        disabled={!episode || !hasPrevious}
+                        onClick={ function () {
+                            previousEpisode();
+                        }}
+                    >
                         <img src="/play-previous.svg" alt="Reproduzir anterior" />
                     </button>
 
@@ -113,12 +173,25 @@ export function Player() {
 
                     </button>
 
-                    <button type="button" disabled={!episode}>
+                    <button
+                        type="button"
+                        disabled={!episode || !hasNext}
+                        onClick={ function () {
+                            nextEpisode();
+                        }}
+                    >
                         <img src="/play-next.svg" alt="Reproduzir proximo" />
                     </button>
 
-                    <button type="button" disabled={!episode}>
-                        <img src="/repeat.svg" alt="Repitir" />
+                    <button
+                        type="button"
+                        disabled={!episode}
+                        className={isLooping ? styles.isActive : ''}
+                        onClick={ function () {
+                            toggleLoop();
+                        }}
+                    >
+                        <IoRepeat />
                     </button>
                 </div>
             </footer>

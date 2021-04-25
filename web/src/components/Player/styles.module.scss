@@ -117,8 +117,17 @@
             button {
                 background: transparent;
                 border: 0;
-                font-size: 0;
                 border-radius: 1rem;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    color: var(--white);
+                }
 
                 transition: filter .2s;
 
@@ -139,6 +148,18 @@
 
                 &:hover:not(:disabled) {
                     filter: brightness(0.95);
+                }
+            }
+
+            button.isActive {
+                svg {
+                    color: var(--green-500);
+                }
+
+                &:hover {
+                    svg {
+                        filter: brightness(0.9);
+                    }
                 }
             }
         }
